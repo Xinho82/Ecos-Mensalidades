@@ -5,92 +5,120 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ECOS Liga</title>
 
-<!-- PWA obrigatório -->
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0D1B2A">
-
-<!-- iOS tela cheia -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="ECOS Liga">
-
-<!-- Ícone iOS (apple-touch-icon precisa ser PNG real) -->
 <link rel="apple-touch-icon" href="icon-192.png">
 
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body {
-    height: 100%; width: 100%;
-    background: #0D1B2A;
-    display: flex; align-items: center; justify-content: center;
-    flex-direction: column; gap: 20px;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    overflow: hidden;
-  }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-  .shield {
-    width: 88px; height: 88px;
-    background: #27AE60; border-radius: 22px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 48px; font-weight: 900; color: white;
-    box-shadow: 0 8px 32px rgba(39,174,96,0.4);
-    animation: pop 0.5s cubic-bezier(.34,1.56,.64,1) both;
-  }
-  @keyframes pop {
-    from { transform: scale(0.5); opacity: 0; }
-    to   { transform: scale(1);   opacity: 1; }
-  }
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #0D1B2A;
+}
 
-  .title {
-    color: white; font-size: 22px; font-weight: 800;
-    animation: fade 0.4s 0.2s ease both;
-  }
-  .sub {
-    color: #8FA3B8; font-size: 13px;
-    animation: fade 0.4s 0.35s ease both;
-  }
-  @keyframes fade {
-    from { opacity: 0; transform: translateY(6px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+/* Splash — visível enquanto o iframe carrega */
+#splash {
+  position: fixed; inset: 0;
+  background: #0D1B2A;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 20px; z-index: 10;
+  transition: opacity 0.5s ease;
+}
+#splash.gone { opacity: 0; pointer-events: none; }
 
-  .dots { display: flex; gap: 6px; animation: fade 0.4s 0.5s ease both; }
-  .dot {
-    width: 7px; height: 7px; border-radius: 50%; background: #27AE60;
-    animation: pulse 1.2s infinite ease-in-out;
-  }
-  .dot:nth-child(2) { animation-delay: 0.2s; }
-  .dot:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes pulse {
-    0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
-    40%            { opacity: 1;   transform: scale(1.2); }
-  }
+.shield {
+  width: 88px; height: 88px;
+  background: #27AE60; border-radius: 22px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 48px; font-weight: 900; color: white;
+  box-shadow: 0 8px 32px rgba(39,174,96,0.4);
+  animation: pop 0.5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes pop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+.ttl {
+  color: white; font-size: 22px; font-weight: 800;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  animation: fd 0.4s 0.2s ease both;
+}
+.sub {
+  color: #8FA3B8; font-size: 13px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  animation: fd 0.4s 0.35s ease both;
+}
+@keyframes fd {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.dots { display: flex; gap: 6px; animation: fd 0.4s 0.5s ease both; }
+.dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #27AE60;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+.dot:nth-child(2) { animation-delay: 0.2s; }
+.dot:nth-child(3) { animation-delay: 0.4s; }
+@keyframes pulse {
+  0%, 80%, 100% { opacity: 0.3; transform: scale(0.8); }
+  40%            { opacity: 1;   transform: scale(1.2); }
+}
+
+/* iframe ocupa 100% da tela */
+#app {
+  position: fixed; inset: 0;
+  width: 100%; height: 100%;
+  border: none;
+  display: block;
+}
 </style>
 </head>
 <body>
 
-<div class="shield">E</div>
-<div class="title">ECOS Liga</div>
-<div class="sub">Gestão de Mensalidades</div>
-<div class="dots">
-  <div class="dot"></div>
-  <div class="dot"></div>
-  <div class="dot"></div>
+<div id="splash">
+  <div class="shield">E</div>
+  <div class="ttl">ECOS Liga</div>
+  <div class="sub">Gestão de Mensalidades</div>
+  <div class="dots">
+    <div class="dot"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
 </div>
 
+<!-- SUBSTITUA PELA SUA URL REAL -->
+<iframe
+  id="app"
+  src="https://script.google.com/macros/s/AKfycbyN1cBx8fNEB6gzsr5WCJQB72wHnGtJpxQpQ5bTKd3Hd8Sp7vMbCWIgwDnp1KoMo5VyiA/exec?page=mobile"
+  allow="fullscreen"
+  loading="eager">
+</iframe>
+
 <script>
-// ── Registra o Service Worker (necessário para Android instalar) ──
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('./sw.js').catch(function() {});
+  navigator.serviceWorker.register('./sw.js').catch(function(){});
 }
 
-// ── URL do seu GAS Mobile — SUBSTITUA PELA SUA URL ──
-var GAS_URL = 'https://script.google.com/macros/s/AKfycbyN1cBx8fNEB6gzsr5WCJQB72wHnGtJpxQpQ5bTKd3Hd8Sp7vMbCWIgwDnp1KoMo5VyiA/exec?page=mobile';
+// Esconde splash quando o iframe terminar de carregar
+var iframe = document.getElementById('app');
+var splash = document.getElementById('splash');
 
-// Redireciona após a splash (800ms para a animação aparecer)
+iframe.addEventListener('load', function() {
+  setTimeout(function() {
+    splash.classList.add('gone');
+  }, 400);
+});
+
+// Fallback: esconde splash após 5s mesmo se o iframe demorar
 setTimeout(function() {
-  window.location.replace(GAS_URL);
-}, 800);
+  splash.classList.add('gone');
+}, 5000);
 </script>
 
 </body>
